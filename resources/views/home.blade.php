@@ -55,10 +55,6 @@
                         <img src="https://raw.githubusercontent.com/danny-nguyen-goldenowl/webdev-intern-assignment/main/app/assets/nike.png" alt="nike">
                         <div class="card-header">
                             <h3>Your cart</h3>
-                            @php $total_price = 0 @endphp
-                            @foreach ($cart as $item)
-                                @php $total_price += $item['qty'] * $item['price'] @endphp
-                            @endforeach
                             <h3 id="cart-total">$ {{ number_format( $total_price, 2) }}</h3>
                         </div>
                         <div class="card-cart">
