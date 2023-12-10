@@ -57,53 +57,45 @@
                             <h3>Your cart</h3>
                             <h3 id="cart-total">$ 0.00</h3>
                         </div>
-                        <div class="card-cart">
-                            @if (!empty($cart))
-                            @php $total = 0 @endphp
-                            @foreach ($cart as $productId => $item)
-                            @php $total += $item['qty'] * $item['price'] @endphp
-                            <div id="{{ $productId }}">
+                        <div id="card-cart">
+                            <div id="">
                                 <div id="cart" class="cart">
                                     <div class="cart-left">
-                                        <div class="cart-img" style="background: {{ $item['color'] }};">
-                                            <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}">
+                                        <div class="cart-img" style="background: ;">
+                                            <img src="" alt="">
                                         </div>
                                     </div>
                                     <div class="cart-right">
                                         <div class="cartItemName">
-                                            <h5>{{ $item['name'] }}</h5>
+                                            <h5></h5>
                                         </div>
                                         <div class="cartItemPrice">
-                                            <h4>$ {{ number_format( $item['qty'] * $item['price'], 2) }}</h4>
+                                            <h4></h4>
                                         </div>
-                                        <div class="cartItemAction">
+                                        {{-- <div class="cartItemAction">
                                             <div class="cartItemCount"
-                                            data-price="{{ $item['price'] }}"
-                                            data-url="{{ route('update_item_in_cart', ['productId' => $productId]) }}"
-                                            data-id="{{ $productId }}">
+                                            data-price=""
+                                            data-url=""
+                                            data-id="">
                                                 <div class="cartItemCountMinus">
                                                     <img src="https://raw.githubusercontent.com/danny-nguyen-goldenowl/webdev-intern-assignment/main/app/assets/minus.png" alt="">
                                                 </div>
                                                 <div class="cartItemCountNumber">
-                                                    <input type="text" value="{{ $item['qty'] }}" name="qtybutton" class="cart-plus-minus-box" disabled>
+                                                    <input type="text" value="" name="qtybutton" class="cart-plus-minus-box" disabled>
                                                 </div>
                                                 <div class="cartItemCountPlus">
                                                     <img src="https://raw.githubusercontent.com/danny-nguyen-goldenowl/webdev-intern-assignment/main/app/assets/plus.png" alt="">
                                                 </div>
                                             </div>
                                             <div class="cartItemRemove">
-                                                <span class="icon_close" data-id="{{ $productId }}" data-url="{{ route('delete_item_in_cart', ['productId' => $productId]) }}">
+                                                <span class="icon_close" data-id="" data-url="">
                                                     <img src="https://raw.githubusercontent.com/danny-nguyen-goldenowl/webdev-intern-assignment/main/app/assets/trash.png" alt="">
                                                 </span>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                             </div>
-                            @endforeach
-                            @else
-                            <p>Your cart is empty.</p>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -112,7 +104,7 @@
     </div>
 
     {{-- JS --}}
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> --}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
