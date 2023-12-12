@@ -20,4 +20,4 @@ Route::get('/', [ProductController::class, 'index']);
 Route::get('add_to_cart/{productId}',[CartController::class,'addToCart'])->name('add_to_cart');
 Route::get('delete_item_in_cart/{productId}', [CartController::class, 'deleteItem'])->name('delete_item_in_cart');
 Route::get('update_item_in_cart/{productId}/{qty?}', [CartController::class, 'updateItem'])->name('update_item_in_cart');
-Route::post('show_cart', [CartController::class, 'showCart'])->name('show_cart');
+Route::get('/get_products', [ProductController::class, 'getData']);

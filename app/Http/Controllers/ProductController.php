@@ -9,10 +9,14 @@ class ProductController extends Controller
 {
     public function index (){
 
-        $products = Product::get();
         return view('home',[
-            'products' => $products
             ]
         );
+    }
+
+    public function getData()
+    {
+        $data = Product::get();
+        return response()->json($data);
     }
 }

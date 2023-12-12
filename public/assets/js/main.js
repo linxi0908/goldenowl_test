@@ -171,17 +171,7 @@ $(document).ready(function () {
         }
     }
 
-    var cartItemsArray = JSON.parse(cartData);
-    var cartItemsLength = Object.keys(cartItemsArray).length;
 
-    $.ajax({
-        url: "{{ route('show_cart') }}",
-        method: "POST",
-        data: { cartItemsLength: cartItemsLength },
-        success: function (response) {
-            console.log(response);
-        },
-    });
 });
 
 function calculateTotalPrice() {

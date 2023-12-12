@@ -31,14 +31,14 @@ body {
 
 }
 
-.container {
+#container {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.container:before {
+#container:before {
     content: "";
     display: block;
     position: fixed;
@@ -149,7 +149,7 @@ a{
     text-transform: uppercase;
 }
 
-.card-container {
+#card-container {
     display: flex;
     flex-direction: column;
     max-height: 500px;
@@ -157,7 +157,7 @@ a{
     scrollbar-width: none;
     scroll-behavior: smooth;
 }
-.card-container::-webkit-scrollbar {
+#card-container::-webkit-scrollbar {
     width: 0px;
 }
 

@@ -36,13 +36,5 @@ class CartController extends Controller
         ]);
     }
 
-    public function showCart(Request $request){
-
-        $cartItemsLength = $request->input('cartItemsLength');
-
-        return view('home',[
-            'cartItemsLength' => $cartItemsLength,
-        ]);
-    }
 
 }
