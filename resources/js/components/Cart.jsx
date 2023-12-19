@@ -1,10 +1,11 @@
-import React, {  useContext } from "react";
+import React, {  useContext, useDebugValue, useEffect } from "react";
 import { AppContext } from "../AppContext";
 
 function Cart() {
-    const {cart, removeFromCart, changeQty, data } = useContext(AppContext);
+    const {cartItems, removeFromCart, changeQty } = useContext(AppContext);
+    useEffect(() => {
 
-    const cartItems = data.filter((item) => cart.includes(item.id));
+      }, [cartItems]);
     return (
         <div>
             {cartItems.length > 0 ? (
@@ -28,7 +29,7 @@ function Cart() {
                                         <h5>{item.name}</h5>
                                     </div>
                                     <div className="cartItemPrice">
-                                        <h4>${item.price}</h4>
+                                        <h4>$ {item.price}</h4>
                                     </div>
                                     <div className="cartItemAction">
                                         <div className="cartItemCount">

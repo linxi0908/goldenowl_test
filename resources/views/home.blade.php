@@ -38,7 +38,7 @@
                         <img src="https://raw.githubusercontent.com/danny-nguyen-goldenowl/webdev-intern-assignment/main/app/assets/nike.png" alt="nike">
                         <div class="card-header">
                             <h3>Your cart</h3>
-                            <h3 id="cart-total">$ 0.00</h3>
+                            <div id="cart-total"></div>
                         </div>
                         <div id="card-cart"></div>
                     </div>

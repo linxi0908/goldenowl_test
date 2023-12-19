@@ -26,7 +26,7 @@ function Product() {
                         <h4>$ {item.price}</h4>
                         <p>
                             <a
-                                href="#"
+                                href=""
                                 className="add-to-cart"
                                 onClick={(event) =>
                                     handleAddToCart(item.id, event)

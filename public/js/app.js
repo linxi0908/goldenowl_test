@@ -2113,7 +2113,6 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var AppContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)({});
 var AppProvider = function AppProvider(_ref) {
   var children = _ref.children;
-  //Product
   var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState2 = _slicedToArray(_useState, 2),
     data = _useState2[0],
@@ -2124,12 +2123,18 @@ var AppProvider = function AppProvider(_ref) {
     setCart = _useState4[1];
   var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState6 = _slicedToArray(_useState5, 2),
-    addedToCart = _useState6[0],
-    setAddedToCart = _useState6[1];
-  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
+    cartItems = _useState6[0],
+    setCartItems = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
     _useState8 = _slicedToArray(_useState7, 2),
-    isInitialMount = _useState8[0],
-    setIsInitialMount = _useState8[1];
+    addedToCart = _useState8[0],
+    setAddedToCart = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true),
+    _useState10 = _slicedToArray(_useState9, 2),
+    isInitialMount = _useState10[0],
+    setIsInitialMount = _useState10[1];
+
+  //Product
   var fetchData = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee() {
       var response;
@@ -2158,55 +2163,43 @@ var AppProvider = function AppProvider(_ref) {
       return _ref2.apply(this, arguments);
     };
   }();
-
-  // const handleAddToCart = (id, event) => {
-  //     event.preventDefault();
-  //     const item = data.find((item) => item.id === id);
-  //     if (item && !item.addedToCart) {
-  //         const updatedItem = { ...item, addedToCart: true, qty: 1 };
-  //         setCart((prevCart) => [...prevCart, updatedItem]);
-  //         setData((prevData) =>
-  //             prevData.map((item) => (item.id === id ? updatedItem : item))
-  //         );
-  //         setAddedToCart((prevAddedToCart) => [...prevAddedToCart, id]);
-  //     }
-  // };
-
   var handleAddToCart = function handleAddToCart(id, event) {
     event.preventDefault();
-    var updatedData = data.map(function (item) {
-      if (item.id === id) {
-        return _objectSpread(_objectSpread({}, item), {}, {
-          addedToCart: true,
-          qty: 1
-        });
-      }
-      return item;
+    var item = data.find(function (item) {
+      return item.id === id;
     });
-    setCart(function (prevCart) {
-      return [].concat(_toConsumableArray(prevCart), [id]);
-    });
-    setData(updatedData);
+    if (item && !isAddedToCart(id)) {
+      var updatedItem = _objectSpread(_objectSpread({}, item), {}, {
+        addedToCart: true,
+        qty: 1
+      });
+      setCart(function (prevCart) {
+        return [].concat(_toConsumableArray(prevCart), [updatedItem]);
+      });
+      setAddedToCart(function (prevAddedToCart) {
+        return [].concat(_toConsumableArray(prevAddedToCart), [id]);
+      });
+    }
   };
   var isAddedToCart = function isAddedToCart(id) {
     return addedToCart.includes(id);
   };
 
-  //Cart
+  // Cart
 
   var removeFromCart = function removeFromCart(id) {
-    var updatedCart = cart.filter(function (item) {
+    var updatedCart = cartItems.filter(function (item) {
       return item.id !== id;
     });
     setCart(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
   };
   var changeQty = function changeQty(id, num) {
-    var updatedCart = cart.map(function (item) {
+    var updatedCart = cartItems.map(function (item) {
       if (item.id === id) {
         var updatedQty = item.qty + num;
         if (updatedQty < 1) {
-          var _updatedCart = cart.filter(function (item) {
+          var _updatedCart = cartItems.filter(function (item) {
             return item.id !== id;
           });
           setCart(_updatedCart);
@@ -2224,28 +2217,24 @@ var AppProvider = function AppProvider(_ref) {
     setCart(filteredCart);
     localStorage.setItem("cart", JSON.stringify(filteredCart));
   };
+  var totalPrice = cartItems.reduce(function (accumulator, current) {
+    return accumulator + current.price * current.qty;
+  }, 0);
+  var calculateTotalPrice = function calculateTotalPrice() {
+    return cartItems.reduce(function (accumulator, current) {
+      return Number((accumulator + current.price * current.qty).toFixed(2));
+    }, 0);
+  };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     fetchData();
-    var savedCart = JSON.parse(localStorage.getItem("cart"));
-    if (savedCart) {
-      setCart(savedCart);
-    }
   }, []);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    if (isInitialMount) {
-      setIsInitialMount(false);
-    } else {
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
-  }, [cart, isInitialMount, setCart]);
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
-    var addedToCartIds = data.filter(function (item) {
-      return item.addedToCart;
-    }).map(function (item) {
-      return item.id;
-    });
-    setAddedToCart(addedToCartIds);
-  }, [data]);
+    var storedCart = JSON.parse(localStorage.getItem("cart"));
+    setCartItems(storedCart);
+  }, [cartItems, calculateTotalPrice]);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(AppContext.Provider, {
     value: {
       cart: cart,
@@ -2259,7 +2248,11 @@ var AppProvider = function AppProvider(_ref) {
       setAddedToCart: setAddedToCart,
       isInitialMount: isInitialMount,
       setIsInitialMount: setIsInitialMount,
-      isAddedToCart: isAddedToCart
+      cartItems: cartItems,
+      setCartItems: setCartItems,
+      isAddedToCart: isAddedToCart,
+      totalPrice: totalPrice,
+      calculateTotalPrice: calculateTotalPrice
     },
     children: children
   });
@@ -2280,24 +2273,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _AppContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AppContext */ "./resources/js/AppContext.jsx");
 /* harmony import */ var _components_Cart__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/Cart */ "./resources/js/components/Cart.jsx");
 /* harmony import */ var _components_Product__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Product */ "./resources/js/components/Product.jsx");
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var _components_TotalPrice__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/TotalPrice */ "./resources/js/components/TotalPrice.jsx");
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
 
 
 
 
 
 
-var root = react_dom_client__WEBPACK_IMPORTED_MODULE_4__.createRoot(document.getElementById('card-container'));
-root.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), {
-  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppProvider, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_components_Product__WEBPACK_IMPORTED_MODULE_3__["default"], {})
+
+var root = react_dom_client__WEBPACK_IMPORTED_MODULE_5__.createRoot(document.getElementById('card-container'));
+root.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), {
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppProvider, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_Product__WEBPACK_IMPORTED_MODULE_3__["default"], {})
   })
 }));
-var root1 = react_dom_client__WEBPACK_IMPORTED_MODULE_4__.createRoot(document.getElementById('card-cart'));
-root1.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), {
-  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppProvider, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_components_Cart__WEBPACK_IMPORTED_MODULE_2__["default"], {})
+var root1 = react_dom_client__WEBPACK_IMPORTED_MODULE_5__.createRoot(document.getElementById('card-cart'));
+root1.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), {
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppProvider, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_Cart__WEBPACK_IMPORTED_MODULE_2__["default"], {})
+  })
+}));
+var root2 = react_dom_client__WEBPACK_IMPORTED_MODULE_5__.createRoot(document.getElementById('cart-total'));
+root2.render( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)((react__WEBPACK_IMPORTED_MODULE_0___default().StrictMode), {
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppProvider, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_TotalPrice__WEBPACK_IMPORTED_MODULE_4__["default"], {})
   })
 }));
 
@@ -2324,13 +2325,10 @@ __webpack_require__.r(__webpack_exports__);
 
 function Cart() {
   var _useContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppContext),
-    cart = _useContext.cart,
+    cartItems = _useContext.cartItems,
     removeFromCart = _useContext.removeFromCart,
-    changeQty = _useContext.changeQty,
-    data = _useContext.data;
-  var cartItems = data.filter(function (item) {
-    return cart.includes(item.id);
-  });
+    changeQty = _useContext.changeQty;
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {}, [cartItems]);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
     children: cartItems.length > 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
       children: cartItems.map(function (item, index) {
@@ -2358,7 +2356,7 @@ function Cart() {
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
               className: "cartItemPrice",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("h4", {
-                children: ["$", item.price]
+                children: ["$ ", item.price]
               })
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
               className: "cartItemAction",
@@ -2467,7 +2465,7 @@ function Product() {
             children: ["$ ", item.price]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("a", {
-              href: "#",
+              href: "",
               className: "add-to-cart",
               onClick: function onClick(event) {
                 return handleAddToCart(item.id, event);
@@ -2481,6 +2479,41 @@ function Product() {
   });
 }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Product);
+
+/***/ }),
+
+/***/ "./resources/js/components/TotalPrice.jsx":
+/*!************************************************!*\
+  !*** ./resources/js/components/TotalPrice.jsx ***!
+  \************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _AppContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AppContext */ "./resources/js/AppContext.jsx");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+
+
+
+
+function TotalPrice() {
+  var _useContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(_AppContext__WEBPACK_IMPORTED_MODULE_1__.AppContext),
+    cartItems = _useContext.cartItems,
+    calculateTotalPrice = _useContext.calculateTotalPrice;
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    children: cartItems.length > 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("h3", {
+      children: ["$ ", calculateTotalPrice()]
+    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
+      children: "$ 0.00"
+    })
+  });
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (TotalPrice);
 
 /***/ }),
 
